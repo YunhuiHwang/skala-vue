@@ -35,7 +35,7 @@ const onSelectRegion = ({ repCityId }) => {
 
 <template>
   <div class="live-wrapper">
-    <h2>🌧 비 오는 날엔 전이지 - 수도권 실시간 날씨</h2>
+    <h2>🌧 비 오는 날엔 전이지 🌧</h2>
     <p class="hint">
       지도에서 지역을 클릭하거나, 좌우 카드를 눌러 상세 날씨와 근처 전 맛집을 확인하세요.
     </p>

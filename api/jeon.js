@@ -10,7 +10,9 @@
 //       인증 헤더  : X-NCP-APIGW-API-KEY-ID / X-NCP-APIGW-API-KEY
 //   - 환경변수 이름은 기존(NAVER_CLIENT_ID / NAVER_CLIENT_SECRET) 그대로 두되,
 //     값은 NAVER API HUB Application 의 Client ID / Client Secret 을 넣는다.
-//   - 요청: GET /api/jeon?city=성남  →  "성남 전집" 블로그 글 상위 3건 반환
+//   - 요청: GET /api/jeon?city=성남  →  "성남 모듬전 파전 맛집" 블로그 글 상위 3건 반환
+//     ("전집" 만 넣으면 문학 "전집" 후기가, "전 맛집" 은 일반 맛집 글이 섞여 나와
+//      "모듬전 파전 맛집" 으로 전(부침개) 파는 식당 후기에 최대한 맞춤)
 
 const SEARCH_URL = 'https://naverapihub.apigw.ntruss.com/search/v1/blog'
 
@@ -30,7 +32,7 @@ export default async function handler(req, res) {
   const display = Math.min(Number(req.query.limit) || 3, 10)
 
   const url = new URL(SEARCH_URL)
-  url.searchParams.set('query', `${city} 전집`)
+  url.searchParams.set('query', `${city} 모듬전 파전 맛집`)
   url.searchParams.set('display', String(display))
   url.searchParams.set('sort', 'sim')
 
