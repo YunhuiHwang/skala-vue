@@ -1,5 +1,11 @@
 <script setup>
 // RepCityCard.vue (Weather Axios 실습 - 지도 양옆에 배치되는 대표 도시 카드)
+// 작성자 : P068 황윤희
+// 작성일 : 2026-08-27
+// 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Axios)
+// 변경사항 :
+//   - city / weather props 를 받아 도시명·기온·상태를 표시, 클릭 시 click 이벤트 emit
+//   - 비 오는 도시는 카드 배경을 하늘색 계열로 강조
 
 defineProps({
   city: {

@@ -26,7 +26,7 @@ import { RouterLink } from 'vue-router'
       </p>
     </div>
 
-    <RouterLink class="btn-sort" to="/">← 대시보드로 돌아가기</RouterLink>
+    <RouterLink class="btn-sort" to="/dashboard">← 대시보드로 돌아가기</RouterLink>
   </div>
 </template>
 

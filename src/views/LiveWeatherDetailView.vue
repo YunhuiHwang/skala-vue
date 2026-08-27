@@ -1,8 +1,11 @@
 <script setup>
 // LiveWeatherDetailView.vue (Weather Axios 실습 - '/live/:repCityId' 상세)
-// 작성목적 : 대표 도시의 실시간 날씨 상세 + Kakao 로컬 API 로 "{도시} 전" 맛집 상위 3곳 링크 표시
-// 참고     : 상세 페이지로 바로 진입(새로고침 등)한 경우를 대비해 liveWeatherStore 에
-//           데이터가 없으면 mount 시점에 다시 로드한다.
+// 작성자 : P068 황윤희
+// 작성일 : 2026-08-27
+// 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Axios)
+// 변경사항 :
+//   - 대표 도시의 실시간 날씨 상세 + Kakao 로컬 API 로 "{도시} 전" 맛집 상위 3곳 링크 표시
+//   - 상세로 바로 진입(새로고침)한 경우를 대비해 store 에 데이터가 없으면 mount 시점에 다시 로드
 
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

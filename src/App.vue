@@ -9,6 +9,7 @@
 //   - 화면 전환은 전부 라우터가 담당 (전체 새로고침 없는 SPA 네비게이션)
 //   - 01/02/03 실습 파일은 components/exercise/ 에 그대로 보존 (라우팅에서는 제외)
 //   - [Store] 내비게이션 바 옆에 UnitToggler(온도 단위 전환)를 배치
+//   - [Showcase] 네비게이션을 사이트 공통 헤더로 변경 (비 오는 날엔 전이지 · 이전 단계 · 대시보드)
 
 import { RouterLink, RouterView } from 'vue-router'
 import UnitToggler from './components/exercise/UnitToggler.vue'
@@ -18,9 +19,9 @@ import UnitToggler from './components/exercise/UnitToggler.vue'
   <header class="app-nav">
     <strong class="brand">🌦 Weather</strong>
     <nav>
-      <RouterLink to="/">대시보드</RouterLink>
-      <RouterLink to="/stats">통계</RouterLink>
-      <RouterLink to="/about">소개</RouterLink>
+      <RouterLink to="/live">비 오는 날엔 전이지</RouterLink>
+      <RouterLink to="/practice">이전 단계</RouterLink>
+      <RouterLink to="/dashboard">대시보드</RouterLink>
     </nav>
     <UnitToggler />
   </header>
@@ -39,7 +40,7 @@ import UnitToggler from './components/exercise/UnitToggler.vue'
   display: flex;
   align-items: center;
   gap: 20px;
-  max-width: 600px;
+  max-width: 960px;
   margin: 0 auto 20px;
   padding: 12px 15px;
   border-bottom: 2px solid #e9ecef;

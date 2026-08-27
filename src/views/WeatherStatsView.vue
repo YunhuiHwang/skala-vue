@@ -48,14 +48,14 @@ const statusCount = computed(() =>
       <div class="stat-box">
         <span class="stat-label">가장 더운 도시</span>
         <strong class="stat-value">
-          <RouterLink :to="`/weather/${hottest.id}`">{{ hottest.name }}</RouterLink>
+          <RouterLink :to="`/dashboard/weather/${hottest.id}`">{{ hottest.name }}</RouterLink>
           {{ hottest.temp }}°C
         </strong>
       </div>
       <div class="stat-box">
         <span class="stat-label">가장 추운 도시</span>
         <strong class="stat-value">
-          <RouterLink :to="`/weather/${coldest.id}`">{{ coldest.name }}</RouterLink>
+          <RouterLink :to="`/dashboard/weather/${coldest.id}`">{{ coldest.name }}</RouterLink>
           {{ coldest.temp }}°C
         </strong>
       </div>
@@ -71,7 +71,7 @@ const statusCount = computed(() =>
       </ul>
     </div>
 
-    <RouterLink class="btn-sort" to="/">← 대시보드로 돌아가기</RouterLink>
+    <RouterLink class="btn-sort" to="/dashboard">← 대시보드로 돌아가기</RouterLink>
   </div>
 </template>
 

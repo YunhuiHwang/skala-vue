@@ -91,7 +91,7 @@ const selectCity = (cityName) => {
 const goDetail = (cityName) => {
   const cityId = findCityIdByName(cityName)
   if (cityId) {
-    router.push(`/weather/${cityId}`)
+    router.push(`/dashboard/weather/${cityId}`)
   }
 }
 
@@ -115,7 +115,7 @@ const toggleSort = () => {
         <RouterLink
           v-for="city in recentStore.recentCities"
           :key="city.id"
-          :to="`/weather/${city.id}`"
+          :to="`/dashboard/weather/${city.id}`"
           class="recent-chip"
         >
           {{ city.name }}

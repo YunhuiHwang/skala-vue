@@ -54,7 +54,7 @@ watch(
 )
 
 const goHome = () => {
-  router.push('/')
+  router.push('/dashboard')
 }
 </script>
 

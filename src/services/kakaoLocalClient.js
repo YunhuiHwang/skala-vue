@@ -1,8 +1,10 @@
 // kakaoLocalClient.js (Weather Axios 실습 - 기타 외부 API 확장)
-// 작성목적 : 대표 도시 이름 + "전" 키워드로 장소를 검색해 상위 3곳의 링크를 보여준다.
-// 참고     : 카카오 디벨로퍼스 콘솔 > 내 애플리케이션 > 플랫폼 > Web 에
-//           개발 중인 도메인(예: http://localhost:5173)을 등록해야 브라우저에서
-//           바로 호출했을 때 CORS 에러 없이 응답을 받을 수 있다.
+// 작성자 : P068 황윤희
+// 작성일 : 2026-08-27
+// 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Axios)
+// 변경사항 :
+//   - 대표 도시 이름 + "전" 키워드로 Kakao 로컬 API 를 검색해 상위 3곳의 링크를 반환
+//   - 브라우저에서 바로 호출하려면 카카오 콘솔 > 앱 설정 > 플랫폼 > Web 에 도메인 등록 필요 (CORS)
 
 import axios from 'axios'
 

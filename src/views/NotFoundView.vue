@@ -16,7 +16,7 @@ const route = useRoute()
   <div class="dashboard-wrapper">
     <h2>404 - 페이지를 찾을 수 없습니다</h2>
     <p class="no-result">요청하신 경로 '{{ route.path }}' 는 존재하지 않습니다.</p>
-    <RouterLink class="btn-sort" to="/">← 대시보드로 돌아가기</RouterLink>
+    <RouterLink class="btn-sort" to="/">← 홈으로 돌아가기</RouterLink>
   </div>
 </template>
 

@@ -1,7 +1,11 @@
 // owmClient.js (Weather Axios 실습 - OpenWeatherMap 통신)
-// 작성목적 : 대표 도시 8곳의 실시간 날씨를 조회한다.
-// 참고     : .env 의 VITE_OWM_API_KEY 가 없으면 키 미설정 에러를 던지므로,
-//           호출하는 쪽(store)에서 반드시 try/catch 로 감싼다.
+// 작성자 : P068 황윤희
+// 작성일 : 2026-08-27
+// 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Axios)
+// 변경사항 :
+//   - 대표 도시 8곳의 실시간 날씨를 OpenWeatherMap 에서 조회
+//   - 무료 플랜(분당 60콜) 한도 대응으로 요청을 CHUNK_SIZE 단위로 나눠 순차 호출
+//   - .env 의 VITE_OWM_API_KEY 가 없으면 에러를 던지므로 호출부(store)에서 try/catch 필요
 
 import axios from 'axios'
 

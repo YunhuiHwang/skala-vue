@@ -1,9 +1,12 @@
 <script setup>
 // KoreaCapitalMap.vue (Weather Axios 실습 - 수도권 시군구 지도)
-// 작성목적 : southkorea-maps(GADM) 시군구 경계 데이터를 D3 로 투영해 SVG path 로 렌더링한다.
-//           비가 오는 대표 도시(repCity)에 속한 시군구는 하늘색으로 칠한다.
-// 참고     : DOM 을 직접 조작하지 않고, 각 지역의 path "d" 문자열을 computed 로 계산해
-//           Vue 템플릿에서 v-for 로 그리는 방식(선언적) 을 사용했다.
+// 작성자 : P068 황윤희
+// 작성일 : 2026-08-27
+// 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Axios)
+// 변경사항 :
+//   - southkorea-maps(GADM) 시군구 경계 데이터를 D3 로 투영해 SVG path 로 렌더링
+//   - 비 오는 대표 도시(repCity)에 속한 시군구는 하늘색으로 칠함
+//   - DOM 직접 조작 없이 각 지역의 path "d" 를 computed 로 계산해 v-for 로 그리는 선언적 방식
 
 import { computed } from 'vue'
 import * as d3 from 'd3'

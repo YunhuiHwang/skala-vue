@@ -1,10 +1,11 @@
 <script setup>
 // LiveWeatherMapView.vue (Weather Axios 실습 - '/live' 실시간 수도권 날씨 지도)
-// 작성목적 : OpenWeatherMap 으로 대표 도시 8곳의 실시간 날씨를 조회해
-//           수도권 시군구 지도에 "비 오는 지역"을 하늘색으로 표시하고,
-//           지도 양옆에 대표 도시 카드를 배치한다.
-// 흐름     : 카드 또는 지도 클릭 -> /live/:repCityId 상세 페이지로 이동
-//           (상세 페이지에서 날씨 상세 + Kakao 로컬 API 로 "전" 맛집 3곳 링크 표시)
+// 작성자 : P068 황윤희
+// 작성일 : 2026-08-27
+// 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Axios)
+// 변경사항 :
+//   - OpenWeatherMap 으로 대표 도시 8곳 실시간 날씨를 조회해 수도권 지도에 비 오는 지역을 하늘색 표시
+//   - 지도 양옆에 대표 도시 카드 배치, 카드·지도 클릭 시 /live/:repCityId 상세로 이동
 
 import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
