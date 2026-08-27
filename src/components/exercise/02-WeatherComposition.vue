@@ -15,52 +15,56 @@ const weatherList = ref([
   { id: 'city_10', name: '울산', temp: 33, min: 29, max: 37, status: '맑음' },
 ])
 
-// 검색어 및 알림창 제어용 데이터 (v-model 대용 한글 처리 및 이벤트 실습용)
+// 검색어 및 알림창 제어
 const searchQuery = ref('')
 const selectedCityInfo = ref('카드를 클릭하거나 검색해 보세요.')
 
-// 본인만의 반응형 상태: 정렬 기준 (이름순 / 온도순)
-const sortOrder = ref('name')
+// 본인만의 반응형 상태 변수: 카드를 몇 번 클릭했는지 카운트
+const viewCount = ref(0)
 
-// 검색어로 필터링된 날씨 리스트 (검색어가 비어있으면 원본 그대로 반환)
+// computed: 검색어에 맞게 필터링된 리스트
 const filteredWeatherList = computed(() => {
-  const keyword = searchQuery.value.trim()
-  if (!keyword) return weatherList.value
-  return weatherList.value.filter((item) => item.name.includes(keyword))
-})
-
-// 본인만의 Computed: 필터링된 리스트를 정렬 기준에 따라 재정렬
-const sortedWeatherList = computed(() => {
-  const list = [...filteredWeatherList.value]
-  if (sortOrder.value === 'temp') {
-    return list.sort((a, b) => b.temp - a.temp)
+  const query = searchQuery.value.trim()
+  if (!query) {
+    return weatherList.value
   }
-  return list.sort((a, b) => a.name.localeCompare(b.name))
+  return weatherList.value.filter((item) => item.name.includes(query))
 })
 
-// selectedCityInfo 감시 (watch): 상태바 문구가 바뀔 때마다 로그
-watch(selectedCityInfo, (newValue, oldValue) => {
-  console.log(`[watch] selectedCityInfo 변경: "${oldValue}" -> "${newValue}"`)
+// 본인만의 computed: 열대야 조심 뱃지가 뜨는 도시 개수 (비 오는 곳 제외, 최저기온 25도 이상)
+const tropicalNightCount = computed(
+  () => weatherList.value.filter((item) => item.status !== '비' && item.min >= 25).length,
+)
+
+// watch: 상태바 문구가 바뀔 때마다 콘솔로그
+watch(selectedCityInfo, (newInfo) => {
+  console.log(`[watch] 상태 바 문구가 업데이트되었습니다 -> "${newInfo}"`)
 })
 
-// searchQuery 감시 (watchEffect): 타이핑할 때마다 변하는 검색어 추적
+// watchEffect: 검색어가 바뀔 때마다 자동으로 추적
 watchEffect(() => {
-  console.log(`[watchEffect] 현재 검색어: "${searchQuery.value}"`)
+  console.log(`[watchEffect] 현재 검색어 '${searchQuery.value}'로 필터링 중`)
 })
 
-// 본인만의 Watcher: 정렬 기준이 바뀔 때마다 로그
-watch(sortOrder, (newValue) => {
-  console.log(`[watch] 정렬 기준 변경: ${newValue === 'temp' ? '온도순' : '이름순'}`)
+// 본인만의 watch: 카드 클릭 횟수를 감시
+watch(viewCount, (newCount) => {
+  console.log(`[watch] 지금까지 카드를 총 ${newCount}번 클릭했습니다.`)
 })
 
-// 알림 대행 함수 (window 객체 격리 우회)
+// 알림 대행 함수
 const showDetail = (cityName, status) => {
   window.alert(`${cityName}의 현재 날씨는 [${status}] 상태입니다.`)
+}
+
+// 카드 클릭 시 상태바 갱신 + 클릭 횟수 증가
+const selectCity = (name) => {
+  selectedCityInfo.value = `${name}이 선택되었습니다.`
+  viewCount.value++
 }
 </script>
 
 <template>
-  <div class="dashboard-wrapper">
+  <div class="dashboard-wrapper" @click="selectedCityInfo = '카드를 클릭하거나 검색해 보세요.'">
     <section class="search-box">
       <h3>도시 검색</h3>
       <!-- v-model 대신 :value와 @input 사용 -->
@@ -73,40 +77,38 @@ const showDetail = (cityName, status) => {
       <p>
         검색 중인 도시: <strong>{{ searchQuery }}</strong>
       </p>
-
-      <!-- 본인만의 상태 컨트롤: 정렬 기준 토글 -->
-      <button class="btn-sort" @click="sortOrder = sortOrder === 'name' ? 'temp' : 'name'">
-        정렬 기준: {{ sortOrder === 'temp' ? '온도순' : '이름순' }} (클릭해서 전환)
-      </button>
     </section>
 
     <section class="list-box">
       <h3>지역별 날씨 현황</h3>
-
-      <!-- 검색 결과가 없을 때 안내 문구 -->
-      <p v-if="sortedWeatherList.length === 0" class="no-result">
-        검색 결과와 일치하는 도시가 없습니다.
+      <p class="summary">
+        🌙 열대야 주의 도시: {{ tropicalNightCount }}곳 / 카드 클릭 횟수: {{ viewCount }}회
       </p>
 
-      <!-- 검색어가 비었거나 일치하는 데이터가 있을 때 목록 출력 -->
       <div
-        v-for="item in sortedWeatherList"
+        v-for="item in filteredWeatherList"
         :key="item.id"
         class="weather-card"
-        @click="selectedCityInfo = `${item.name}이 선택되었습니다.`"
+        @click.stop="selectCity(item.name)"
       >
         <h4>{{ item.name }} ({{ item.status }})</h4>
         <p>현재 기온: {{ item.temp }}°C</p>
         <p>최저 기온: {{ item.min }}°C/최고 기온: {{ item.max }}°C</p>
 
-        <span v-if="item.temp >= 25" class="badge hot">더움 (25도 이상)</span>
-        <span v-else class="badge cool">선선함 (25도 미만)</span>
+        <!-- 본인만의 조건으로 변경한 v-if 사용 -->
+        <span v-if="item.status === '비'" class="badge rain">☔ 우산 챙기세요</span>
+        <span v-else-if="item.min >= 25" class="badge tropical">🌙 열대야 조심</span>
+        <span v-else-if="item.status === '맑음'" class="badge sunny">☀️ 맑음</span>
 
         <!-- 버블링 없이 alert 창 띄우기 위해 .stop 수식어 사용 -->
         <button class="btn-detail" @click.stop="showDetail(item.name, item.status)">
           상세보기
         </button>
       </div>
+
+      <p v-if="filteredWeatherList.length === 0" class="no-result">
+        검색 결과와 일치하는 도시가 없습니다.
+      </p>
     </section>
 
     <div class="status-bar">

@@ -1,4 +1,13 @@
 <script setup>
+// 01.Weather Mockup
+// 작성자 : P068 황윤희
+// 작성일 : 2026-08-25
+// 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습
+// 변경사항 :
+//   - 도시 10개로 확장, min/max 필드 추가, status 4종 확장
+//   - v-if 조건을 status+min 기준으로 변경
+//   - 카드 외 영역 클릭 시 선택 초기화 기능 추가
+
 import { ref } from 'vue'
 
 // 날씨 데이터 (최저기온/최고기온 추가 및 데이터 추가)
@@ -54,7 +63,7 @@ const showDetail = (cityName, status) => {
         <p>현재 기온: {{ item.temp }}°C</p>
         <p>최저 기온: {{ item.min }}°C/최고 기온: {{ item.max }}°C</p>
 
-        <!-- 본인만의 조건으로 변경한 v-if 사용 -->
+        <!-- 본인만의 조건으로 변경한 v-if -->
         <span v-if="item.status === '비'" class="badge rain">☔ 우산 챙기세요</span>
         <span v-else-if="item.min >= 25" class="badge tropical">🌙 열대야 조심</span>
         <span v-else-if="item.status === '맑음'" class="badge sunny">☀️ 맑음</span>
