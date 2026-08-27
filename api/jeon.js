@@ -1,11 +1,18 @@
 // api/jeon.js (Weather Axios 실습 - 네이버 블로그 검색 프록시)
 // 작성자 : P068 황윤희
-// 작성일 : 2026-08-27
+// 작성일 : 2026-08-28
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Axios)
 // 변경사항 :
 //   - 네이버 검색 API 는 CORS 를 허용하지 않아 브라우저에서 직접 호출 불가 → Vercel 서버리스 함수로 프록시
-//   - NAVER_CLIENT_ID / NAVER_CLIENT_SECRET(VITE_ 접두사 없는 서버 전용 환경변수) 사용
+//   - [2026-08 이관] 기존 Naver Developers Center(openapi.naver.com, X-Naver-Client-* 헤더)가
+//     NAVER API HUB(네이버 클라우드)로 통합됨. 엔드포인트와 인증 헤더를 HUB 방식으로 교체.
+//       엔드포인트 : https://naverapihub.apigw.ntruss.com/search/v1/blog
+//       인증 헤더  : X-NCP-APIGW-API-KEY-ID / X-NCP-APIGW-API-KEY
+//   - 환경변수 이름은 기존(NAVER_CLIENT_ID / NAVER_CLIENT_SECRET) 그대로 두되,
+//     값은 NAVER API HUB Application 의 Client ID / Client Secret 을 넣는다.
 //   - 요청: GET /api/jeon?city=성남  →  "성남 전집" 블로그 글 상위 3건 반환
+
+const SEARCH_URL = 'https://naverapihub.apigw.ntruss.com/search/v1/blog'
 
 export default async function handler(req, res) {
   const clientId = process.env.NAVER_CLIENT_ID
@@ -22,7 +29,7 @@ export default async function handler(req, res) {
   }
   const display = Math.min(Number(req.query.limit) || 3, 10)
 
-  const url = new URL('https://openapi.naver.com/v1/search/blog.json')
+  const url = new URL(SEARCH_URL)
   url.searchParams.set('query', `${city} 전집`)
   url.searchParams.set('display', String(display))
   url.searchParams.set('sort', 'sim')
@@ -30,8 +37,8 @@ export default async function handler(req, res) {
   try {
     const naverRes = await fetch(url, {
       headers: {
-        'X-Naver-Client-Id': clientId,
-        'X-Naver-Client-Secret': clientSecret,
+        'X-NCP-APIGW-API-KEY-ID': clientId,
+        'X-NCP-APIGW-API-KEY': clientSecret,
       },
     })
     if (!naverRes.ok) {
@@ -41,6 +48,7 @@ export default async function handler(req, res) {
     }
     const data = await naverRes.json()
     const stripTags = (s) => String(s ?? '').replace(/<[^>]+>/g, '')
+    // 응답 구조(items[].title/link/description/bloggername/postdate)는 이관 후에도 동일
     const posts = (data.items ?? []).map((item) => ({
       title: stripTags(item.title),
       link: item.link,

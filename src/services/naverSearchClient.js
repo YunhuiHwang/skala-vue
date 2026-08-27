@@ -1,11 +1,13 @@
 // naverSearchClient.js (Weather Axios 실습 - 기타 외부 API 확장)
 // 작성자 : P068 황윤희
-// 작성일 : 2026-08-27
+// 작성일 : 2026-08-28
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Axios)
 // 변경사항 :
 //   - 대표 도시 이름 + "전집" 키워드로 네이버 블로그 글 상위 3건을 검색
 //   - 네이버 검색 API 는 CORS 를 허용하지 않아, 서버리스 함수(/api/jeon)를 통해 호출하고
 //     실제 네이버 호출과 Client ID/Secret 보관은 서버가 담당
+//   - 2026-08 검색 API 가 NAVER API HUB(네이버 클라우드)로 이관되며 서버 쪽 엔드포인트/헤더가 바뀌었으나,
+//     이 클라이언트는 /api/jeon 만 호출하므로 변경 없음
 
 import axios from 'axios'
 
