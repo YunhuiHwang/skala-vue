@@ -9,21 +9,35 @@
 //   - 도시 상세 기상관측 정보(현재/최저/최고 기온, 습도, 풍속, 강수확률, 기압) 표시
 //   - 잘못된 cityId 로 접근하면 안내 문구 + 대시보드 복귀 링크 노출
 //   - :cityId 만 바뀌는 이동(상세 → 상세)에도 대응하도록 route.params 변화를 watch
+//   - [Store] configStore.unit 에 따라 기온을 섭씨·화씨로 변환해 표시
+//   - [Store] 도시를 조회할 때마다 recentStore.addRecentView 로 "최근 본 도시" 기록
 
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { findCity } from '../data/cities.js'
+import { useConfigStore } from '../stores/configStore.js'
+import { useRecentStore } from '../stores/recentStore.js'
 
 const route = useRoute()
 const router = useRouter()
+const configStore = useConfigStore()
+const recentStore = useRecentStore()
 
 // 현재 화면에 표시할 도시 객체 (없으면 null)
 const city = ref(null)
 
-// cityId 로 Mock Data 조회 후 city 에 반영
+// 섭씨 숫자 → 현재 단위 표시 문자열 (예: "28℃" / "82℉")
+const formatTemp = (celsius) => {
+  const value = configStore.unit === 'fahrenheit' ? Math.round((celsius * 9) / 5 + 32) : celsius
+  return `${value}${configStore.unitSymbol}`
+}
+
+// cityId 로 Mock Data 조회 후 city 에 반영, 유효하면 최근 본 도시로 기록
 const loadCity = (cityId) => {
   city.value = findCity(cityId)
-  console.log('[WeatherDetailView] 현재 경로:', route.path, '/ cityId:', cityId)
+  if (city.value) {
+    recentStore.addRecentView(cityId)
+  }
 }
 
 onMounted(() => {
@@ -55,10 +69,11 @@ const goHome = () => {
         </p>
         <ul class="detail-list">
           <li>
-            <span>현재 기온</span><strong>{{ city.temp }}°C</strong>
+            <span>현재 기온</span><strong>{{ formatTemp(city.temp) }}</strong>
           </li>
           <li>
-            <span>최저 / 최고</span><strong>{{ city.min }}°C / {{ city.max }}°C</strong>
+            <span>최저 / 최고</span
+            ><strong>{{ formatTemp(city.min) }} / {{ formatTemp(city.max) }}</strong>
           </li>
           <li>
             <span>습도</span><strong>{{ city.humidity }}%</strong>

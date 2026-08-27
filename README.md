@@ -82,3 +82,19 @@ a.name.localeCompare(b.name)) })
 공용 Mock Data를 computed로 집계해서 전체 도시 수, 평균 기온, 최고/최저 기온 도시, 날씨 상태(맑음/비/구름많음/흐림)별 도시 수 분포를 보여준다.
 
 최고 기온 도시와 최저 기온 도시는 이름을 클릭하면 해당 도시의 상세 페이지로 바로 이동하도록 만들어서, 단순히 숫자만 나열하는 통계 화면이 아니라 다른 화면과 연결되게 했다.
+
+# 5. Store
+
+## 5.0 파일명 리팩토링
+
+실습 과정을 진행하면서 편의상 파일명에 실습 순서를 붙인 '01-' ~ '04-' 프리픽스가 존재했다. 그런데 파일 수정 시 버전 관리가 어렵고 import 등에 불편함이 생겨 이번 실습 진행 전 제거하는 방향으로 리팩토링했다.
+
+## 5.1 온도 단위 전환 (configStore)
+
+'unit'(섭씨/화씨) state, 'unitSymbol' getter, 'toggleUnit' action을 두고 네비게이션 바 옆 'UnitToggler'로 전환한다. 목록과 상세는 'formatTemp()'로 단위에 맞춰 기온을 변환해 보여주고, 뱃지 조건은 섭씨 기준을 유지했다.
+
+## 5.2 최근 본 도시 (본인 추가 recentStore)
+
+상세 페이지에 들어갈 때마다 조회한 도시를 'recentStore'에 쌓아, 홈 상단에 '최근 본 도시' 섹션으로 보여준다. 상태 'recentCityIds'에 도시 id를 최신순으로 담고, action 'addRecentView'는 중복 id를 맨 앞으로 당기며 최대 5개까지만 유지하도록 구현했다.
+
+'WeatherDetailView'의 'loadCity()'에서 'addRecentView'를 호출하고, 홈에서는 도시명을 누르면 'RouterLink'로 해당 상세 페이지로 이동한다.

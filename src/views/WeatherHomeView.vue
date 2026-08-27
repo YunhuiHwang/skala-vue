@@ -10,16 +10,20 @@
 //   - 03 의 자식 컴포넌트(SearchBar, WeatherCard, BaseDashboardCard, WeatherPagination)를 그대로 재사용
 //   - 상세보기 시 window.alert() 를 제거하고 Programmatic Navigation 으로 변경
 //     WeatherCard 의 detail 이벤트 → router.push('/weather/' + cityId)
+//   - [Store] recentStore 를 구독해 "최근 본 도시" 섹션을 추가
+//     (상세 페이지에서 언마운트돼도 스토어가 살아있어 목록이 유지됨)
 
 import { ref, computed, watch, watchEffect } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { cities, findCityIdByName } from '../data/cities.js'
+import { useRecentStore } from '../stores/recentStore.js'
 import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 import SearchBar from '../components/exercise/SearchBar.vue'
 import WeatherCard from '../components/exercise/WeatherCard.vue'
 import WeatherPagination from '../components/exercise/WeatherPagination.vue'
 
 const router = useRouter()
+const recentStore = useRecentStore()
 
 // 공용 Mock Data (원본 배열을 직접 건드리지 않도록 복사해서 보관)
 const weatherList = ref([...cities])
@@ -106,6 +110,19 @@ const toggleSort = () => {
       @toggle-sort="toggleSort"
     />
 
+    <BaseDashboardCard v-if="recentStore.recentCities.length > 0" title="최근 본 도시">
+      <div class="recent-list">
+        <RouterLink
+          v-for="city in recentStore.recentCities"
+          :key="city.id"
+          :to="`/weather/${city.id}`"
+          class="recent-chip"
+        >
+          {{ city.name }}
+        </RouterLink>
+      </div>
+    </BaseDashboardCard>
+
     <BaseDashboardCard title="지역별 날씨 현황">
       <p v-if="sortedWeatherList.length === 0" class="no-result">
         검색 결과와 일치하는 도시가 없습니다.
@@ -132,3 +149,27 @@ const toggleSort = () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.recent-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recent-chip {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 999px;
+  font-size: 13px;
+  text-decoration: none;
+  color: #495057;
+}
+
+.recent-chip:hover {
+  border-color: #0984e3;
+  color: #0984e3;
+}
+</style>

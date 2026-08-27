@@ -7,6 +7,10 @@
 //   - 반복되던 날씨 카드 1개를 자식 컴포넌트로 분리
 //   - item prop 으로 도시 1건을 받아 표시, select / detail 을 emit
 //   - 버블링 방지를 위해 클릭 핸들러에 @click.stop 유지
+//   - [Store] configStore.unit 에 따라 기온(현재/최저/최고)을 섭씨·화씨로 변환해 표시
+//     (뱃지 조건은 원본 섭씨 기준 그대로 유지)
+
+import { useConfigStore } from '../../stores/configStore.js'
 
 defineProps({
   // 날씨 도시 1건 { id, name, temp, min, max, status }
@@ -17,13 +21,21 @@ defineProps({
 })
 
 const emit = defineEmits(['select', 'detail'])
+
+const configStore = useConfigStore()
+
+// 섭씨 숫자 → 현재 단위 표시 문자열 (예: "28℃" / "82℉")
+const formatTemp = (celsius) => {
+  const value = configStore.unit === 'fahrenheit' ? Math.round((celsius * 9) / 5 + 32) : celsius
+  return `${value}${configStore.unitSymbol}`
+}
 </script>
 
 <template>
   <div class="weather-card" @click.stop="emit('select', item.name)">
     <h4>{{ item.name }} ({{ item.status }})</h4>
-    <p>현재 기온: {{ item.temp }}°C</p>
-    <p>최저 기온: {{ item.min }}°C/최고 기온: {{ item.max }}°C</p>
+    <p>현재 기온: {{ formatTemp(item.temp) }}</p>
+    <p>최저 기온: {{ formatTemp(item.min) }} / 최고 기온: {{ formatTemp(item.max) }}</p>
 
     <!-- Mockup과 동일한 조건 (status + min 기준) -->
     <span v-if="item.status === '비'" class="badge rain">☔ 우산 챙기세요</span>

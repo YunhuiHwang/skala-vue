@@ -8,8 +8,10 @@
 //   - 상단 내비게이션 바(<RouterLink>)와 메인 콘텐츠 영역(<RouterView />)만 배치
 //   - 화면 전환은 전부 라우터가 담당 (전체 새로고침 없는 SPA 네비게이션)
 //   - 01/02/03 실습 파일은 components/exercise/ 에 그대로 보존 (라우팅에서는 제외)
+//   - [Store] 내비게이션 바 옆에 UnitToggler(온도 단위 전환)를 배치
 
 import { RouterLink, RouterView } from 'vue-router'
+import UnitToggler from './components/exercise/UnitToggler.vue'
 </script>
 
 <template>
@@ -20,6 +22,7 @@ import { RouterLink, RouterView } from 'vue-router'
       <RouterLink to="/stats">통계</RouterLink>
       <RouterLink to="/about">소개</RouterLink>
     </nav>
+    <UnitToggler />
   </header>
 
   <main class="app-main">
