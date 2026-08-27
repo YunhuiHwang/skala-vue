@@ -15,7 +15,7 @@ const weatherList = ref([
   { id: 'city_10', name: '울산', temp: 33, min: 29, max: 37, status: '맑음' },
 ])
 
-// 검색어 및 알림창 제어용 데이터 (v-model 대용 한글 처리 및 이벤트 실습용)
+// 검색어 및 알림창 제어 (v-model 한글 처리 및 이벤트 실습용)
 const searchQuery = ref('')
 const selectedCityInfo = ref('카드를 클릭하거나 검색해 보세요.')
 
@@ -26,7 +26,7 @@ const showDetail = (cityName, status) => {
 </script>
 
 <template>
-  <div class="dashboard-wrapper">
+  <div class="dashboard-wrapper" @click="selectedCityInfo = '카드를 클릭하거나 검색해 보세요.'">
     <section class="search-box">
       <h3>도시 검색</h3>
       <!-- v-model 대신 :value와 @input 사용 -->
@@ -48,14 +48,16 @@ const showDetail = (cityName, status) => {
         v-for="item in weatherList"
         :key="item.id"
         class="weather-card"
-        @click="selectedCityInfo = `${item.name}이 선택되었습니다.`"
+        @click.stop="selectedCityInfo = `${item.name}이 선택되었습니다.`"
       >
         <h4>{{ item.name }} ({{ item.status }})</h4>
         <p>현재 기온: {{ item.temp }}°C</p>
         <p>최저 기온: {{ item.min }}°C/최고 기온: {{ item.max }}°C</p>
 
-        <span v-if="item.temp >= 25" class="badge hot">더움 (25도 이상)</span>
-        <span v-else class="badge cool">선선함 (25도 미만)</span>
+        <!-- 본인만의 조건으로 변경한 v-if 사용 -->
+        <span v-if="item.status === '비'" class="badge rain">☔ 우산 챙기세요</span>
+        <span v-else-if="item.min >= 25" class="badge tropical">🌙 열대야 조심</span>
+        <span v-else-if="item.status === '맑음'" class="badge sunny">☀️ 맑음</span>
 
         <!-- 버블링 없이 alert 창 띄우기 위해 .stop 수식어 사용 -->
         <button class="btn-detail" @click.stop="showDetail(item.name, item.status)">

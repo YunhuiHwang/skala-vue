@@ -1,3 +1,27 @@
+# 1. Mockup
+
+## 1.1 데이터
+
+기존 3개 도시(서울/수원/부산)를 10개(제주/대전/광주/대구/강릉/인천/울산 추가)로 늘렸다. 각 도시에 최저기온(min), 최고기온(max) 필드도 추가했고, 날씨 상태(status)도 맑음/비 2종류에서 날씨앱을 참고해 4종류로 늘렸다.
+
+## 1.2 v-if 조건 변경
+
+온도 25도 기준으로 더움/선선함 구분하던 조건을 status와 min(최저기온)을 보는 조건들로 변경했다.
+
+```vue
+<span v-if="item.status === '비'" class="badge rain">☔ 우산 챙기세요</span>
+<span v-else-if="item.min >= 25" class="badge tropical">🌙 열대야 조심</span>
+<span v-else-if="item.status === '맑음'" class="badge sunny">☀️ 맑음</span>
+```
+
+비 오면 우산 안내, 비가 안 오며 밤에 25도 이상이면 열대야 조심, 그것도 아니면서 맑으면 맑음 표시를 보여준다. 구름많음/흐림인 날은 셋 다 해당 안 돼서 뱃지가 안 뜨는데, 애매한 날씨에 억지로 라벨 붙일 필요는 없을 것 같아 현재 상태를 유지하기로 했다.
+
+## 1.3 카드 밖 클릭하면 초기화
+
+날씨 카드 누르면 상태바에 도시명 뜨는 기능이 있는데, 검색창이나 빈 공간처럼 카드 아닌 곳을 누르면 다시 초기 문구로 돌아가는 기능을 추가했다.
+
+제일 바깥 'dashboard-wrapper'에 클릭 이벤트를 걸고, 카드 클릭에는 '.stop'이 없으면 바로 초기화 문구로 덮어써버려서 '.stop'을 붙였다.
+
 WetherComposition.vue 만들 때
 
 [vue/compiler-sfc] Legacy octal literals are not allowed in strict mode. (2:7)
