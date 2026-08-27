@@ -8,7 +8,7 @@
 
 온도 25도 기준으로 더움/선선함 구분하던 조건을 status와 min(최저기온)을 보는 조건들로 변경했다.
 
-```vue
+```html
 <span v-if="item.status === '비'" class="badge rain">☔ 우산 챙기세요</span>
 <span v-else-if="item.min >= 25" class="badge tropical">🌙 열대야 조심</span>
 <span v-else-if="item.status === '맑음'" class="badge sunny">☀️ 맑음</span>
@@ -28,9 +28,14 @@
 
 타이핑할 때마다 직접 리스트를 걸러내는 대신, computed로 검색어에 맞는 도시만 자동으로 다시 계산되도록 작성했다. 검색 결과가 하나도 없으면 안내 문구를 따로 띄운다.
 
-```vue
-const filteredWeatherList = computed(() => { const query = searchQuery.value.trim() if (!query)
-return weatherList.value return weatherList.value.filter((item) => item.name.includes(query)) })
+```js
+const filteredWeatherList = computed(() => {
+  const query = searchQuery.value.trim()
+  if (!query) {
+    return weatherList.value
+  }
+  return weatherList.value.filter((item) => item.name.includes(query))
+})
 ```
 
 ## 2.2 상태 감시 (watch, watchEffect)
@@ -41,10 +46,13 @@ selectedCityInfo(상태바 문구)는 watch로, searchQuery(검색어)는 watchE
 
 이름순/온도순으로 바꿀 수 있는 정렬 토글 버튼을 추가했다. sortOrder 상태를 두고, 검색으로 걸러진 리스트를 정렬 기준에 맞게 다시 정렬해서 화면에 보여준다.
 
-```vue
-const sortedWeatherList = computed(() => { const list = [...filteredWeatherList.value] return
-sortOrder.value === 'temp' ? list.sort((a, b) => b.temp - a.temp) : list.sort((a, b) =>
-a.name.localeCompare(b.name)) })
+```js
+const sortedWeatherList = computed(() => {
+  const list = [...filteredWeatherList.value]
+  return sortOrder.value === 'temp'
+    ? list.sort((a, b) => b.temp - a.temp)
+    : list.sort((a, b) => a.name.localeCompare(b.name))
+})
 ```
 
 # 3. Components
@@ -98,3 +106,60 @@ a.name.localeCompare(b.name)) })
 상세 페이지에 들어갈 때마다 조회한 도시를 'recentStore'에 쌓아, 홈 상단에 '최근 본 도시' 섹션으로 보여준다. 상태 'recentCityIds'에 도시 id를 최신순으로 담고, action 'addRecentView'는 중복 id를 맨 앞으로 당기며 최대 5개까지만 유지하도록 구현했다.
 
 'WeatherDetailView'의 'loadCity()'에서 'addRecentView'를 호출하고, 홈에서는 도시명을 누르면 'RouterLink'로 해당 상세 페이지로 이동한다.
+
+# 6. Axios
+
+## 6.0 아이디어와 진행 방식
+
+비 오는 날씨 카드를 보다가, 비 오는 지역을 알려주고 해당 지역의 전집을 검색해 보여주는 기능을 구현해보기로 했다. 5번까지는 최대한 직접 코드를 작성하다 보니 시간이 부족했고, 지도 시각화와 외부 API 연동까지 범위가 커지면서 이 방식으로는 시간이 오래 걸릴 것으로 판단해 6번부터는 코드 제너레이션을 적극 활용했다. 다만 결과를 그대로 받아쓰지 않고, 구조와 이유를 직접 질문하며 이해한 뒤 반영했다.
+
+## 6.1 API 연동 히스토리
+
+맛집 검색은 처음에 카카오 로컬 API로 구현했다. 로컬 환경에서는 정상 동작했으나 Vercel 배포 후에는 호출이 실패했다. 서버리스 프록시 방식으로 전환하면 해결될 것으로 예상하고 시도했으나, 이 역시 호출에 실패했다.
+
+여러 방법을 시도했음에도 해결되지 않아, 최종적으로 네이버 검색 API로 전환했다. 네이버는 서비스 URL만 등록하면 인증 정보가 즉시 발급돼 연동이 비교적 수월했다. 브라우저에서 직접 호출할 경우 CORS 문제가 발생해, Vercel 서버리스 함수를 통해 호출하는 방식으로 구현했다.
+
+시도했던 카카오 버전 코드는 트러블슈팅 기록 차원에서 남겨두었다.
+
+## 6.2 최종 구현 요약
+
+수도권 시군구 지도를 GeoJSON과 D3로 렌더링하고, 대표 도시 8곳의 실시간 날씨를 OpenWeatherMap으로 조회해 비 오는 지역을 표시했다. 하루 한 번만 API를 호출하도록 날짜 기준 캐싱을 적용했으며, 지도나 카드를 클릭하면 상세 페이지에서 날씨 정보와 전집 후기 블로그 글 상위 3건을 확인할 수 있다.
+
+지도를 렌더링하는 과정에서 투영 방식 관련 문제를 겪었다. 구면 투영을 적용하니 각 시군구 영역이 반전되어 표시되는 문제가 있었는데, 수도권처럼 좁은 범위에서는 왜곡이 무시할 수준이라 판단해 평면 투영 방식으로 변경해 해결했다.
+
+
+# 7. UI Libraries
+
+## 7.0 라이브러리 선정 이유
+
+Element Plus를 선택했다. Vue 3 Composition API를 정식 지원하고 한글 자료가 풍부해, 처음 다뤄보는 라이브러리를 빠르게 적용하기에 적합하다고 판단했다.
+
+## 7.1 적용 범위
+
+기존 컴포넌트 전체를 교체하기보다, 온도 단위 토글 버튼을 스위치 컴포넌트로, 대표 도시 카드를 카드 컴포넌트로 바꾸는 정도로 적용 범위를 제한했다.
+
+## 7.2 트러블슈팅
+
+처음에는 전역 등록 방식으로 적용했는데, 실제 사용하는 컴포넌트는 두 개뿐임에도 빌드 결과물 용량이 크게 증가했다. 필요한 컴포넌트만 개별로 불러오는 방식으로 변경해 해결했다.
+
+스토어에 저장된 온도 단위 값은 문자열 타입이고 스위치 컴포넌트는 불리언 값을 다루기 때문에 타입이 맞지 않았는데, 둘을 변환해주는 계산된 속성(computed)을 두어 연결했다.
+
+# 8. Vite Build and Deployment
+
+## 8.0 진행 순서
+
+수업을 모두 들은 뒤 6번부터의 과정을 시작했기 때문에, 처음부터 API 키를 환경 변수 파일에 저장하고 .gitignore 목록에 등록한 상태로 진행했다.
+
+## 8.1 소스 코드 품질 관리
+
+ESLint 점검을 통해 에러가 없는 상태임을 확인했다. API 키는 환경 변수로 분리했으며, 실제 값이 담긴 파일은 깃 무시 목록에 포함시켜 저장소에는 예시 파일만 커밋했다.
+
+키는 노출 범위에 따라 구분해 관리했다. OpenWeatherMap 키는 브라우저에서 직접 호출하므로 클라이언트 코드에 포함되며, 네이버 키는 서버리스 함수에서만 사용되도록 별도 접두사로 분리했다.
+
+## 8.2 빌드와 배포
+
+빌드를 진행해 정적 파일이 정상적으로 생성되는 것을 확인했고, Vercel을 통해 배포했다. 배포 주소는 다음과 같다.
+
+https://skala-vue-p068.vercel.app
+
+시크릿 창으로 접속해 로그인 없이 정상적으로 표시되는 것까지 확인했다.

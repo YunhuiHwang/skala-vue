@@ -6,6 +6,12 @@
 // 변경사항 :
 //   - city / weather props 를 받아 도시명·기온·상태를 표시, 클릭 시 click 이벤트 emit
 //   - 비 오는 도시는 카드 배경을 하늘색 계열로 강조
+//   - [UI Library] 직접 만든 button 카드를 Element Plus 의 ElCard 로 교체
+//     ElCard 는 클릭 이벤트가 없는 표시용 컴포넌트라 native @click 으로 연결하고,
+//     키보드로도 이동할 수 있도록 role/tabindex 와 Enter·Space 처리를 함께 둔다
+
+import { ElCard } from 'element-plus'
+import 'element-plus/theme-chalk/el-card.css'
 
 defineProps({
   city: {
@@ -22,10 +28,15 @@ const emit = defineEmits(['click'])
 </script>
 
 <template>
-  <button
+  <ElCard
     class="rep-city-card"
     :class="{ rainy: weather?.isRaining }"
+    shadow="hover"
+    role="button"
+    tabindex="0"
     @click="emit('click', city.id)"
+    @keydown.enter.prevent="emit('click', city.id)"
+    @keydown.space.prevent="emit('click', city.id)"
   >
     <div class="rep-city-name">{{ city.name }}</div>
     <template v-if="weather">
@@ -33,24 +44,19 @@ const emit = defineEmits(['click'])
       <div class="rep-city-desc">{{ weather.isRaining ? '☔ ' : '' }}{{ weather.description }}</div>
     </template>
     <div v-else class="rep-city-desc">불러오는 중...</div>
-  </button>
+  </ElCard>
 </template>
 
 <style scoped>
 .rep-city-card {
-  display: block;
   width: 110px;
-  background: #fff;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 10px;
-  text-align: left;
   cursor: pointer;
-  font: inherit;
+  text-align: left;
+  --el-card-padding: 10px;
 }
 
 .rep-city-card.rainy {
-  background: #eaf6ff;
+  --el-card-bg-color: #eaf6ff;
   border-color: #87ceeb;
 }
 
