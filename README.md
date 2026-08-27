@@ -16,28 +16,33 @@
 
 ## 1.3 카드 밖 클릭하면 초기화
 
-날씨 카드 누르면 상태바에 도시명 뜨는 기능이 있는데, 검색창이나 빈 공간처럼 카드 아닌 곳을 누르면 다시 초기 문구로 돌아가는 기능을 추가했다.
+날씨 카드 누르면 상태바에 도시명 뜨는 기능이 있는데, 검색창이나 빈 공간처럼 카드 아닌 곳을 누르면 다시 초기 문구로 돌아가는 기능을 추가했다. 제일 바깥 'dashboard-wrapper'에 클릭 이벤트를 걸고, 카드 클릭에는 '.stop'이 없으면 바로 초기화 문구로 덮어써버려서 '.stop'을 붙였다.
 
-제일 바깥 'dashboard-wrapper'에 클릭 이벤트를 걸고, 카드 클릭에는 '.stop'이 없으면 바로 초기화 문구로 덮어써버려서 '.stop'을 붙였다.
+## 1.4 트러블슈팅: 파일명 변경 후 import 깨짐
+
+파일명을 실습 순서를 붙여 '01-WeatherMockup.vue'로 바꾸려 했는데, VS Code가 자동으로 import 경로도 고쳐주며 'WeatherMockup.vue/index.js'라는 잘못된 경로로 바꿔줬다. 게다가 이 깨진 import가 'App.vue'가 아니라 'HomeView.vue'에 있어서 한참 헤매다, 에러 메시지에 찍힌 파일 경로를 찾아서 수정치니 정상 작동했다.
 
 # 2. Composition
 
-## 1.1 데이터
+## 2.1 검색 필터링 (computed)
 
-WetherComposition.vue 만들 때
+타이핑할 때마다 직접 리스트를 걸러내는 대신, computed로 검색어에 맞는 도시만 자동으로 다시 계산되도록 작성했다. 검색 결과가 하나도 없으면 안내 문구를 따로 띄운다.
 
-[vue/compiler-sfc] Legacy octal literals are not allowed in strict mode. (2:7)
+```vue
+const filteredWeatherList = computed(() => { const query = searchQuery.value.trim() if (!query)
+return weatherList.value return weatherList.value.filter((item) => item.name.includes(query)) })
+```
 
-<script setup>
-import 01-WeatherMockup from './components/exercise/01-WeatherMockup.vue'
-</script>
+## 2.2 상태 감시 (watch, watchEffect)
 
-<template><01-WeatherMockup /></template>
+selectedCityInfo(상태바 문구)는 watch로, searchQuery(검색어)는 watchEffect로 감시해서 값이 바뀔 때마다 콘솔에 로그를 남기게 했다.
 
-<script setup>
-import WeatherMockup from './components/exercise/01-WeatherMockup.vue'
-</script>
+## 2.3 정렬 기능 (본인 추가 기능)
 
-<template><WeatherMockup /></template>
+이름순/온도순으로 바꿀 수 있는 정렬 토글 버튼을 추가했다. sortOrder 상태를 두고, 검색으로 걸러진 리스트를 정렬 기준에 맞게 다시 정렬해서 화면에 보여준다.
 
---> 정리하면 import 할 때는 숫자/문자로 시작 못 한다는 걸 몰라서 안 됐고, 수정했는데도 안 돼서 보니까 App.vue만 바꾸고 HomeView.vue는 안 바꿔서 그런 거였다. 둘 다 변경하니 수정 됨.
+```vue
+const sortedWeatherList = computed(() => { const list = [...filteredWeatherList.value] return
+sortOrder.value === 'temp' ? list.sort((a, b) => b.temp - a.temp) : list.sort((a, b) =>
+a.name.localeCompare(b.name)) })
+```
