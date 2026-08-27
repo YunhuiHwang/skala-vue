@@ -1,9 +1,9 @@
-// 04-cities.js (Weather Router 실습용 공용 Mock Data)
+// cities.js (Weather Router 실습용 공용 Mock Data)
 // 작성자 : P068 황윤희
 // 작성일 : 2026-08-27
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Vue Router)
 // 변경사항 :
-//   - 03-WetherParent 에 인라인으로 있던 도시 배열을 View 여러 곳에서 공유하기 위해 모듈로 분리
+//   - WeatherParent 에 인라인으로 있던 도시 배열을 View 여러 곳에서 공유하기 위해 모듈로 분리
 //   - WeatherDetailView 의 상세 화면을 위해 관측 항목(습도/풍속/강수확률/기압) 추가
 //   - 03 파일은 자체 인라인 데이터를 그대로 두고, 이 모듈은 04(Router) 이후 View 에서만 사용
 

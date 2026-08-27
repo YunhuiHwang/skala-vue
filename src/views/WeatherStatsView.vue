@@ -1,5 +1,5 @@
 <script setup>
-// 04-WeatherStatsView.vue (Weather Router 실습 - '/stats' 통계 요약, 본인 추가 view)
+// WeatherStatsView.vue (Weather Router 실습 - '/stats' 통계 요약, 본인 추가 view)
 // 작성자 : P068 황윤희
 // 작성일 : 2026-08-27
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Vue Router)
@@ -10,7 +10,7 @@
 
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { cities } from '../data/04-cities.js'
+import { cities } from '../data/cities.js'
 
 const count = computed(() => cities.length)
 

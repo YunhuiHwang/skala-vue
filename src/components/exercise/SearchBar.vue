@@ -1,5 +1,5 @@
 <script setup>
-// 03.Search Bar (컴포넌트 분할 - 검색/정렬 입력 자식)
+// SearchBar.vue (컴포넌트 분할 - 검색/정렬 입력 자식)
 // 작성자 : P068 황윤희
 // 작성일 : 2026-08-27
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습
@@ -7,7 +7,7 @@
 //   - 검색 영역(입력창 + 정렬 토글)을 자식 컴포넌트로 분리
 //   - searchQuery / sortOrder 를 props 로 받고 update:searchQuery / toggle-sort 를 emit
 
-import BaseDashboardCard from './03-BaseDashboardCard.vue'
+import BaseDashboardCard from './BaseDashboardCard.vue'
 
 defineProps({
   // 현재 검색어 (부모 소유 상태)

@@ -39,7 +39,7 @@ input {
   color: #fff;
 }
 
-/* 01-WeatherMockup에서 쓰는 뱃지 (status + min 기준) */
+/* WeatherMockup에서 쓰는 뱃지 (status + min 기준) */
 .rain {
   background-color: #0984e3;
 }
@@ -51,7 +51,7 @@ input {
   color: #2d3436;
 }
 
-/* 02-WeatherComposition에서 쓰는 뱃지 (temp 기준) */
+/* WeatherComposition에서 쓰는 뱃지 (temp 기준) */
 .hot {
   background-color: #ff7675;
 }

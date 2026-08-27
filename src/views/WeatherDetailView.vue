@@ -1,5 +1,5 @@
 <script setup>
-// 04-WeatherDetailView.vue (Weather Router 실습 - '/weather/:cityId' 도시 상세)
+// WeatherDetailView.vue (Weather Router 실습 - '/weather/:cityId' 도시 상세)
 // 작성자 : P068 황윤희
 // 작성일 : 2026-08-27
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Vue Router)
@@ -12,7 +12,7 @@
 
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { findCity } from '../data/04-cities.js'
+import { findCity } from '../data/cities.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -23,7 +23,7 @@ const city = ref(null)
 // cityId 로 Mock Data 조회 후 city 에 반영
 const loadCity = (cityId) => {
   city.value = findCity(cityId)
-  console.log('[04-WeatherDetailView] 현재 경로:', route.path, '/ cityId:', cityId)
+  console.log('[WeatherDetailView] 현재 경로:', route.path, '/ cityId:', cityId)
 }
 
 onMounted(() => {

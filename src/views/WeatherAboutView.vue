@@ -1,5 +1,5 @@
 <script setup>
-// 04-WeatherAboutView.vue (Weather Router 실습 - '/about' 소개 페이지)
+// WeatherAboutView.vue (Weather Router 실습 - '/about' 소개 페이지)
 // 작성자 : P068 황윤희
 // 작성일 : 2026-08-27
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Vue Router)

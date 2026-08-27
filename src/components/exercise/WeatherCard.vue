@@ -1,5 +1,5 @@
 <script setup>
-// 03.Weather Card (컴포넌트 분할 - 날씨 카드 자식)
+// WeatherCard.vue (컴포넌트 분할 - 날씨 카드 자식)
 // 작성자 : P068 황윤희
 // 작성일 : 2026-08-27
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습

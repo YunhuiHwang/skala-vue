@@ -10,7 +10,7 @@
 //   - 목록 최하단에 Catch-all Route 배치 → 정의되지 않은 경로는 NotFoundView
 
 import { createRouter, createWebHistory } from 'vue-router'
-import WeatherHomeView from '../views/04-WeatherHomeView.vue'
+import WeatherHomeView from '../views/WeatherHomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,23 +23,23 @@ const router = createRouter({
     {
       path: '/weather/:cityId',
       name: 'weather-detail',
-      component: () => import('../views/04-WeatherDetailView.vue'),
+      component: () => import('../views/WeatherDetailView.vue'),
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('../views/04-WeatherAboutView.vue'),
+      component: () => import('../views/WeatherAboutView.vue'),
     },
     {
       path: '/stats',
       name: 'stats',
-      component: () => import('../views/04-WeatherStatsView.vue'),
+      component: () => import('../views/WeatherStatsView.vue'),
     },
     {
       // Catch-all Route : 위 라우트와 매칭되지 않는 모든 경로 (반드시 최하단)
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      component: () => import('../views/04-NotFoundView.vue'),
+      component: () => import('../views/NotFoundView.vue'),
     },
   ],
 })

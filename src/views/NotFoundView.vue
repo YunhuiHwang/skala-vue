@@ -1,5 +1,5 @@
 <script setup>
-// 04-NotFoundView.vue (Weather Router 실습 - Catch-all Route 대상)
+// NotFoundView.vue (Weather Router 실습 - Catch-all Route 대상)
 // 작성자 : P068 황윤희
 // 작성일 : 2026-08-27
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Vue Router)

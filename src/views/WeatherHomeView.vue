@@ -1,23 +1,23 @@
 <script setup>
-// 04-WeatherHomeView.vue (Weather Router 실습 - '/' 메인 대시보드)
+// WeatherHomeView.vue (Weather Router 실습 - '/' 메인 대시보드)
 // 작성자 : P068 황윤희
 // 작성일 : 2026-08-27
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Vue Router)
 // 변경사항 :
-//   - 03-WetherParent 를 참고하여 '/' 경로에 매핑되는 페이지 컴포넌트로 재작성
+//   - WeatherParent 를 참고하여 '/' 경로에 매핑되는 페이지 컴포넌트로 재작성
 //   - 데이터/상태/computed/watch 구조는 03 과 동일 (검색 필터, 정렬, 페이지네이션 유지)
-//   - 도시 데이터는 src/data/04-cities.js 공용 Mock Data 를 사용 (03 은 인라인 데이터 유지)
-//   - 03 의 자식 컴포넌트(SearchBar, WeatherCard, BaseDashboardCard, Pagination)를 그대로 재사용
+//   - 도시 데이터는 src/data/cities.js 공용 Mock Data 를 사용 (03 은 인라인 데이터 유지)
+//   - 03 의 자식 컴포넌트(SearchBar, WeatherCard, BaseDashboardCard, WeatherPagination)를 그대로 재사용
 //   - 상세보기 시 window.alert() 를 제거하고 Programmatic Navigation 으로 변경
 //     WeatherCard 의 detail 이벤트 → router.push('/weather/' + cityId)
 
 import { ref, computed, watch, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
-import { cities, findCityIdByName } from '../data/04-cities.js'
-import BaseDashboardCard from '../components/exercise/03-BaseDashboardCard.vue'
-import SearchBar from '../components/exercise/03-SearchBar.vue'
-import WeatherCard from '../components/exercise/03-WeatherCard.vue'
-import Pagination from '../components/exercise/03-Pagination.vue'
+import { cities, findCityIdByName } from '../data/cities.js'
+import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
+import SearchBar from '../components/exercise/SearchBar.vue'
+import WeatherCard from '../components/exercise/WeatherCard.vue'
+import WeatherPagination from '../components/exercise/WeatherPagination.vue'
 
 const router = useRouter()
 
@@ -119,7 +119,7 @@ const toggleSort = () => {
         @detail="goDetail"
       />
 
-      <Pagination
+      <WeatherPagination
         v-if="totalPages > 1"
         :current-page="currentPage"
         :total-pages="totalPages"

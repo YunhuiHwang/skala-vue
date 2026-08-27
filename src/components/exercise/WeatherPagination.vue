@@ -1,5 +1,5 @@
 <script setup>
-// 03.Pagination (컴포넌트 분할 - 본인만의 추가 컴포넌트)
+// WeatherPagination.vue (컴포넌트 분할 - 본인만의 추가 컴포넌트)
 // 작성자 : P068 황윤희
 // 작성일 : 2026-08-27
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습
