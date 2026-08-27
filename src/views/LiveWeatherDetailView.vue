@@ -7,7 +7,7 @@
 //   - 대표 도시의 실시간 날씨 상세 + 네이버 블로그 검색으로 "{도시} 전집" 후기 글 상위 3건 표시
 //   - 상세로 바로 진입(새로고침)한 경우를 대비해 store 에 데이터가 없으면 mount 시점에 다시 로드
 
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLiveWeatherStore } from '../stores/liveWeatherStore.js'
 import { findRepCity } from '../data/representativeCities.js'
@@ -47,13 +47,11 @@ watch(
   (newId) => loadDetail(newId),
 )
 
-const weather = ref(null)
-watch(
-  () => liveWeatherStore.cityWeatherMap,
-  () => {
-    weather.value = city.value ? liveWeatherStore.getWeatherById(city.value.id) : null
-  },
-  { immediate: true, deep: true },
+// city(라우트로 결정) 또는 스토어 날씨 맵 중 하나라도 바뀌면 다시 계산.
+// watch 로 cityWeatherMap 만 감시하면, 지도에서 넘어와 맵이 이미 채워진 경우
+// city 가 세팅돼도 갱신되지 않아 새로고침 전까지 "불러오는 중" 이 남는 문제가 있었다.
+const weather = computed(() =>
+  city.value ? liveWeatherStore.getWeatherById(city.value.id) : null,
 )
 
 const goBack = () => router.push('/live')
