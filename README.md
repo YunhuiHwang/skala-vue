@@ -46,3 +46,23 @@ const sortedWeatherList = computed(() => { const list = [...filteredWeatherList.
 sortOrder.value === 'temp' ? list.sort((a, b) => b.temp - a.temp) : list.sort((a, b) =>
 a.name.localeCompare(b.name)) })
 ```
+
+# 3. Components
+
+## 3.1 파일 분할 구조
+
+한 파일에 있던 마크업을 부모 1개와 자식 4개로 분리했다. 데이터와 상태('weatherList', 'searchQuery', 'selectedCityInfo', 'sortOrder', 'currentPage')는 부모가 소유하고, 자식은 props로 값을 전달받아 표시하며 사용자 동작은 emit으로 부모에 전달한다(props down / events up).
+
+- '03-WetherParent.vue' : 데이터/상태/computed/watch를 소유하는 부모 컨테이너
+- '03-SearchBar.vue' : 검색어 입력과 정렬 토글 담당. 'searchQuery', 'sortOrder'를 받아 'update:searchQuery', 'toggle-sort'를 emit
+- '03-WeatherCard.vue' : 날씨 카드 1건 표시. 'item'을 받아 뱃지 조건을 처리하고 'select', 'detail'을 emit
+- '03-BaseDashboardCard.vue' : 카드형 레이아웃 공용 컴포넌트
+- '03-Pagination.vue' : 본인 추가 컴포넌트 (아래 3.2)
+
+## 3.2 페이지네이션 (본인 추가 컴포넌트)
+
+도시가 10개로 늘어나면서 카드가 한 화면에 모두 나열되어 가독성이 떨어지고 심미성이 떨어졌다. 이를 개선하기 위해 한 페이지에 4개('pageSize')씩만 표시하고 페이지를 넘겨볼 수 있는 'Pagination' 컴포넌트를 추가했다.
+
+리스트를 자르는 계산은 부모가 담당하고, 이 컴포넌트는 이전/다음/페이지 번호 버튼 UI만 담당한다. 'currentPage', 'totalPages'를 props로 받고, 페이지 이동은 'update:currentPage'로 emit한다.
+
+검색어나 정렬 기준이 바뀌면 결과 수가 줄어 빈 페이지가 표시될 수 있어, watch로 'currentPage'를 1로 초기화하도록 처리했다.
