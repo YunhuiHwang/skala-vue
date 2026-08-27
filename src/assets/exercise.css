@@ -1,0 +1,89 @@
+/* Weather 과제 공용 스타일 */
+
+.dashboard-wrapper {
+  width: 600px;
+  margin: 0 auto;
+  color: black;
+}
+
+.search-box,
+.list-box {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #e9ecef;
+}
+
+input {
+  padding: 8px;
+  width: 90%;
+  font-size: 14px;
+}
+
+.weather-card {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+/* 01-WeatherMockup에서 쓰는 뱃지 (status + min 기준) */
+.rain {
+  background-color: #0984e3;
+}
+.tropical {
+  background-color: #6c5ce7;
+}
+.sunny {
+  background-color: #fdcb6e;
+  color: #2d3436;
+}
+
+/* 02-WeatherComposition에서 쓰는 뱃지 (temp 기준) */
+.hot {
+  background-color: #ff7675;
+}
+.cool {
+  background-color: #74b9ff;
+}
+
+.btn-detail {
+  position: absolute;
+  right: 12px;
+  top: 15px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.btn-sort {
+  margin-top: 10px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.status-bar {
+  background: #e8f5e9;
+  padding: 10px;
+  text-align: center;
+  color: #2e7d32;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.no-result {
+  text-align: center;
+  color: #e74c3c;
+  padding: 10px 0;
+}
