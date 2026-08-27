@@ -48,7 +48,8 @@ export const useLiveWeatherStore = defineStore('liveWeather', () => {
   async function loadTodayWeather({ force = false } = {}) {
     if (!force) {
       const cached = readCache()
-      if (cached) {
+      // 값이 하나라도 들어있는 캐시만 사용 (과거 실패로 저장된 빈 캐시는 무시)
+      if (cached && Object.keys(cached).length > 0) {
         cityWeatherMap.value = cached
         return
       }
@@ -58,6 +59,13 @@ export const useLiveWeatherStore = defineStore('liveWeather', () => {
     error.value = null
     try {
       const results = await fetchRepresentativeCitiesWeather(representativeCities)
+      // 8곳 모두 실패하면 Promise.allSettled 는 예외를 안 던지므로 여기서 명시적으로 처리
+      if (results.length === 0) {
+        throw new Error(
+          '날씨 데이터를 한 곳도 불러오지 못했습니다. VITE_OWM_API_KEY 를 확인하세요. ' +
+            '(새로 발급한 키는 활성화까지 시간이 걸립니다)',
+        )
+      }
       const map = Object.fromEntries(results.map((w) => [w.id, w]))
       cityWeatherMap.value = map
       lastLoadedAt.value = new Date().toISOString()

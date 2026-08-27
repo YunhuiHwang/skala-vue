@@ -28,7 +28,24 @@ const emit = defineEmits(['select-region'])
 const width = 520
 const height = 560
 
-const projection = d3.geoMercator().fitSize([width, height], capitalGeoJson)
+// GeoJSON 외곽선 감김 방향이 시계방향이라 구면 투영(geoMercator)은
+// 각 시군구를 "지구 전체에서 해당 구역만 뺀 영역"으로 잘못 해석한다.
+// 좁은 수도권 범위에서는 왜곡이 무시할 수준이므로 평면 투영(geoIdentity)을 사용.
+// 데이터에 잘못 들어간 원거리 좌표(일부 MultiPolygon)가 있어, 자동 bounds 대신
+// 수도권 영역 사각형을 기준으로 화면을 맞춘다.
+const FIT_BOUNDS = {
+  type: 'Polygon',
+  coordinates: [
+    [
+      [126.0, 36.8],
+      [127.9, 36.8],
+      [127.9, 38.35],
+      [126.0, 38.35],
+      [126.0, 36.8],
+    ],
+  ],
+}
+const projection = d3.geoIdentity().reflectY(true).fitSize([width, height], FIT_BOUNDS)
 const pathGenerator = d3.geoPath(projection)
 
 const regions = computed(() =>
@@ -40,9 +57,9 @@ const regions = computed(() =>
       d: pathGenerator(feature),
       nameKo: feature.properties.nameKo,
       repCity: feature.properties.repCity,
-      fill: isRainy ? '#7cc4e8' : '#dee2e6',
-      stroke: isSelected ? '#0984e3' : '#6c757d',
-      strokeWidth: isSelected ? 2 : 1,
+      fill: isRainy ? '#7cc4e8' : '#ffffff',
+      stroke: isSelected ? '#0984e3' : '#adb5bd',
+      strokeWidth: isSelected ? 2 : 0.6,
     }
   }),
 )

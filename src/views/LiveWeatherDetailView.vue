@@ -4,23 +4,23 @@
 // 작성일 : 2026-08-27
 // 작성목적 : SKALA 4기 Frontend Framework(Vue.js) Hands on 실습 (Axios)
 // 변경사항 :
-//   - 대표 도시의 실시간 날씨 상세 + Kakao 로컬 API 로 "{도시} 전" 맛집 상위 3곳 링크 표시
+//   - 대표 도시의 실시간 날씨 상세 + 네이버 블로그 검색으로 "{도시} 전집" 후기 글 상위 3건 표시
 //   - 상세로 바로 진입(새로고침)한 경우를 대비해 store 에 데이터가 없으면 mount 시점에 다시 로드
 
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLiveWeatherStore } from '../stores/liveWeatherStore.js'
 import { findRepCity } from '../data/representativeCities.js'
-import { searchJeonRestaurants } from '../services/kakaoLocalClient.js'
+import { searchJeonPosts } from '../services/naverSearchClient.js'
 
 const route = useRoute()
 const router = useRouter()
 const liveWeatherStore = useLiveWeatherStore()
 
 const city = ref(null)
-const restaurants = ref([])
-const restaurantLoading = ref(false)
-const restaurantError = ref(null)
+const posts = ref([])
+const postsLoading = ref(false)
+const postsError = ref(null)
 
 const loadDetail = async (repCityId) => {
   city.value = findRepCity(repCityId)
@@ -30,14 +30,14 @@ const loadDetail = async (repCityId) => {
     await liveWeatherStore.loadTodayWeather()
   }
 
-  restaurantLoading.value = true
-  restaurantError.value = null
+  postsLoading.value = true
+  postsError.value = null
   try {
-    restaurants.value = await searchJeonRestaurants(city.value.name)
+    posts.value = await searchJeonPosts(city.value.name)
   } catch (err) {
-    restaurantError.value = err.message
+    postsError.value = err.message
   } finally {
-    restaurantLoading.value = false
+    postsLoading.value = false
   }
 }
 
@@ -88,14 +88,15 @@ const goBack = () => router.push('/live')
       </div>
       <p v-else class="loading-text">날씨 불러오는 중...</p>
 
-      <div class="restaurant-section">
-        <h3>🥞 {{ city.name }} 근처 전 맛집</h3>
-        <p v-if="restaurantLoading" class="loading-text">맛집 검색 중...</p>
-        <p v-else-if="restaurantError" class="error-text">맛집 검색 실패: {{ restaurantError }}</p>
-        <ul v-else-if="restaurants.length > 0" class="restaurant-list">
-          <li v-for="place in restaurants" :key="place.id">
-            <a :href="place.url" target="_blank" rel="noopener noreferrer">{{ place.name }}</a>
-            <span class="restaurant-address">{{ place.address }}</span>
+      <div class="jeon-section">
+        <h3>🥞 {{ city.name }} 전집 후기</h3>
+        <p v-if="postsLoading" class="loading-text">블로그 글 검색 중...</p>
+        <p v-else-if="postsError" class="error-text">검색 실패: {{ postsError }}</p>
+        <ul v-else-if="posts.length > 0" class="jeon-list">
+          <li v-for="post in posts" :key="post.link">
+            <a :href="post.link" target="_blank" rel="noopener noreferrer">{{ post.title }}</a>
+            <span class="jeon-desc">{{ post.description }}</span>
+            <span class="jeon-meta">{{ post.blogger }}</span>
           </li>
         </ul>
         <p v-else class="no-result">검색 결과가 없습니다.</p>
@@ -151,7 +152,7 @@ const goBack = () => router.push('/live')
   color: #868e96;
 }
 
-.restaurant-section {
+.jeon-section {
   background: #fff;
   border: 1px solid #dee2e6;
   border-radius: 6px;
@@ -160,24 +161,30 @@ const goBack = () => router.push('/live')
   text-align: left;
 }
 
-.restaurant-list {
+.jeon-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.restaurant-list li {
-  padding: 8px 0;
+.jeon-list li {
+  padding: 10px 0;
   border-top: 1px solid #f1f3f5;
   display: flex;
   flex-direction: column;
+  gap: 3px;
 }
 
-.restaurant-list li:first-child {
+.jeon-list li:first-child {
   border-top: none;
 }
 
-.restaurant-address {
+.jeon-desc {
+  font-size: 13px;
+  color: #495057;
+}
+
+.jeon-meta {
   font-size: 12px;
   color: #868e96;
 }
